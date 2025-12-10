@@ -13,8 +13,7 @@ def main():
 
     # Extract
     # Read the messy CSV file
-    low_memory=False
-    raw_df = pd.read_csv("dataset/ODA_SK/ODA_SK.csv")
+    raw_df = pd.read_csv("dataset/ODA_SK/ODA_SK.csv", low_memory=False)
 
     
     # Transform (Clean and Spatialize)
@@ -40,8 +39,8 @@ def main():
     # to_postgis method is from GeoPandas and GeoAlchemy2
     # It automatically creates the table and spatial index
     gdf.to_postgis( 
-         name = 'deliveries', # table to create in Postgres
-         con= engine,         # The connection object
+        name = 'deliveries', # table to create in Postgres
+        con= engine,         # The connection object
         if_exists='replace',  # If the table exists, drop it and replace
         index=True            # Create an index for faster lookups
     )
@@ -57,7 +56,7 @@ def main():
     if 'deliveries' in tables:
         with engine.connect() as conn:
             result = conn.execute(sqlalc.text("SELECT count(*) FROM deliveries"))
-            print(f"Row count: {result.fetchone()[0]}")
+            print(f"Row count: {result.scalar()}")
     else:
         print("Table NOT found. Ingestion srcipt failed to save.")
 

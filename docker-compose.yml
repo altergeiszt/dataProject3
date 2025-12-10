@@ -1,0 +1,29 @@
+version: '3.8'
+services: 
+  db:
+    image: postgis/postgis:15-3.3
+    container_name: logistics_db
+    environment:
+      POSTGRES_USER: aaron
+      POSTGRES_PASSWORD: HueManatee!2395
+      POSTGRES_DB: regina_logistics
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    shm_size: '4gb'
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: logistics_pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: altergeiszt@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: HueManatee!2395
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+  
+volumes:
+  postgres_data:

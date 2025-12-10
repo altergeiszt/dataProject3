@@ -1,9 +1,9 @@
 import pandas as pd
 import geopandas as gpd
-import sqlalchemy.create_engine
+import sqlalchemy as sqlalc
 
 
-DB_CONNECTION_URL = " postgresql://aaron:HueManatee!2395@localhost:5432/regina_logistics"
+DB_CONNECTION_URL = "postgresql://aaron:HueManatee!2395@localhost:5432/regina_logistics"
 
 def main():
     '''
@@ -13,11 +13,13 @@ def main():
 
     # Extract
     # Read the messy CSV file
-    raw_df = pd.read_csv("/dataproject3/dataset/ODA_SK/ODA_SK.csv") 
+    low_memory=False
+    raw_df = pd.read_csv("dataset/ODA_SK/ODA_SK.csv")
+
     
     # Transform (Clean and Spatialize)
     # We'll filter for our target city immedidately to save memory.
-    regina_df = raw_df[raw_df['CSDNAME'] == 'Regina']
+    regina_df = raw_df[raw_df['csdname'] == 'Regina']
 
     # Then we'll create a "Geometry" Column.
     # This act as a bridge which takes two floats columns and creates a spatial object.
@@ -32,8 +34,8 @@ def main():
 
     # Load and push to PostGIS
     # First, we'll create the SQL Engine
-    engine = sqlalchemy.create_engine(DB_CONNECTION_URL)
-
+    engine = sqlalc.create_engine(DB_CONNECTION_URL)
+    
     # Then we write to the Database
     # to_postgis method is from GeoPandas and GeoAlchemy2
     # It automatically creates the table and spatial index
@@ -45,5 +47,20 @@ def main():
     )
 
     print("Regina address data ingested to PostGIS container.")
+    
+    # We'll use this to check if the table was created or not
+    inspector = sqlalc.inspect(engine)
+    tables = inspector.get_table_names()
+    print(f"Tables found in the database: {tables}")
+
+    # We can target the 'deliveries' table and print the row count if it exists.
+    if 'deliveries' in tables:
+        with engine.connect() as conn:
+            result = conn.execute(sqlalc.text("SELECT count(*) FROM deliveries"))
+            print(f"Row count: {result.fetchone()[0]}")
+    else:
+        print("Table NOT found. Ingestion srcipt failed to save.")
+
+   
 
 main()

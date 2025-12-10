@@ -24,6 +24,15 @@ services:
       - "8080:80"
     depends_on:
       - db
-  
+  osrm:
+    image: osrm/osrm-backend:latest
+    container_name: logistics_osrm
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./osrm_data:/data
+    command: "osrm-routed --algorithm mld /data/sask.osrm"
+
 volumes:
   postgres_data:

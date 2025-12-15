@@ -28,12 +28,3 @@ def get_driving_distance(start_lat, start_lon, end_lat, end_lon):
         print(f"Connection failed: {e}")
         return None, None
     
-
-if __name__ == "__main__":
-    dist, dur = get_driving_distance(50.4503, -104.6094, 50.4155, -104.5878)
-
-    if dist is not None and dur is not None:
-        print(f"Driving Distance: {dist/1000:.2f} km")
-        print(f"Driving Time: {dur/60:.1f} minutes")
-    else:
-        print("Route calculation failed. Ensure the OSRM server is running at localhost:5000")

@@ -52,3 +52,32 @@
 
 
 ## Project directory hierarchy:
+ infrastructure/ — Container orchestration and database setup
+
+     docker-compose.yml — (Implemented) DB, PgAdmin, OSRM
+
+ backend/ — Core application logic and routing
+
+     pipeIngest.py — (Implemented) ETL pipeline
+
+     osrm_router.py — (Implemented) OSRM wrapper
+
+     logic_solver.py — (In Progress) VRP optimization engine
+
+ api/ — (TODO) REST/Graph API
+
+     weather_service.py — (TODO) Environment Canada connector
+
+ frontend/ — (TODO) User interfaces
+
+     dispatcher-dashboard/ — (TODO) React-based admin panel
+
+     driver-app/ — (TODO) Mobile-first driver view
+
+ config/ — Project configuration
+
+     mise.toml
+
+     requirements.txt
+
+     .gitignore
